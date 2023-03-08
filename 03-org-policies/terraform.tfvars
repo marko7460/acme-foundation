@@ -1,4 +1,4 @@
-domains_to_allow                    = ["markodevops.com"]
-essential_contacts_domains_to_allow = ["@markodevops.com"]
+domains_to_allow                    = ["niveussolutions.com"]
+essential_contacts_domains_to_allow = ["@niveussolutions.com"]
 policy_name                         = "acme-policy"
 
