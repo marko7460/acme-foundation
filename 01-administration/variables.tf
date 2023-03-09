@@ -24,7 +24,7 @@ variable "folders" {
 variable "administration_folder_name" {
   description = "Name of the administration folder"
   type        = string
-  default     = "Cloud administration"
+  default     = "Cloud adminsn"
 }
 
 variable "terraform_service_accounts" {
