@@ -1,11 +1,12 @@
 resource "tfe_workspace" "shared-vpc-project-dev" {
   name                          = "10-shared-vpc-projects-dev"
   organization                  = var.tfc_organization
+  project_id                    = tfe_project.project.id
   description                   = "Dev Shared VPC Project"
   tag_names                     = ["shared-vpc-project", "dev"]
   allow_destroy_plan            = true
   global_remote_state           = true
-  terraform_version             = "1.3.3"
+  terraform_version             = "1.3.9"
   structured_run_output_enabled = true
   queue_all_runs                = false
   working_directory             = "10-shared-vpc-projects/envs/dev/"
@@ -31,11 +32,12 @@ resource "tfe_workspace_variable_set" "shared-vpc-project-wif-dev" {
 resource "tfe_workspace" "shared-vpc-project-stg" {
   name                          = "10-shared-vpc-projects-stg"
   organization                  = var.tfc_organization
+  project_id                    = tfe_project.project.id
   description                   = "Stg Shared VPC Project"
   tag_names                     = ["shared-vpc-project", "stg"]
   allow_destroy_plan            = true
   global_remote_state           = true
-  terraform_version             = "1.3.3"
+  terraform_version             = "1.3.9"
   structured_run_output_enabled = true
   queue_all_runs                = false
   working_directory             = "10-shared-vpc-projects/envs/stg/"
@@ -61,11 +63,12 @@ resource "tfe_workspace_variable_set" "shared-vpc-project-wif-stg" {
 resource "tfe_workspace" "shared-vpc-project-prd" {
   name                          = "10-shared-vpc-projects-prd"
   organization                  = var.tfc_organization
+  project_id                    = tfe_project.project.id
   description                   = "Prd Shared VPC Project"
   tag_names                     = ["shared-vpc-project", "prd"]
   allow_destroy_plan            = true
   global_remote_state           = true
-  terraform_version             = "1.3.3"
+  terraform_version             = "1.3.9"
   structured_run_output_enabled = true
   queue_all_runs                = false
   working_directory             = "10-shared-vpc-projects/envs/prd/"

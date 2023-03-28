@@ -22,3 +22,9 @@ variable "github_oauth_client" {
   description = "Github OAuth Client ID setup in Terraform Cloud"
   type        = string
 }
+
+variable "tfc_project" {
+  description = "TFC Project Name"
+  type        = string
+  default     = "Foundation"
+}

@@ -1,11 +1,12 @@
 resource "tfe_workspace" "projects-dev" {
   name                          = "30-projects-dev"
   organization                  = var.tfc_organization
+  project_id                    = tfe_project.project.id
   description                   = "Dev Projects"
   tag_names                     = ["projects", "dev"]
   allow_destroy_plan            = true
   global_remote_state           = true
-  terraform_version             = "1.3.3"
+  terraform_version             = "1.3.9"
   structured_run_output_enabled = true
   queue_all_runs                = false
   working_directory             = "30-projects/envs/dev/"
@@ -31,11 +32,12 @@ resource "tfe_workspace_variable_set" "projects-wif-dev" {
 resource "tfe_workspace" "projects-stg" {
   name                          = "30-projects-stg"
   organization                  = var.tfc_organization
+  project_id                    = tfe_project.project.id
   description                   = "Stg Projects"
   tag_names                     = ["projects", "stg"]
   allow_destroy_plan            = true
   global_remote_state           = true
-  terraform_version             = "1.3.3"
+  terraform_version             = "1.3.9"
   structured_run_output_enabled = true
   queue_all_runs                = false
   working_directory             = "30-projects/envs/stg/"
@@ -61,11 +63,12 @@ resource "tfe_workspace_variable_set" "projects-wif-stg" {
 resource "tfe_workspace" "projects-prd" {
   name                          = "30-projects-prd"
   organization                  = var.tfc_organization
+  project_id                    = tfe_project.project.id
   description                   = "Prd Projects"
   tag_names                     = ["projects", "prd"]
   allow_destroy_plan            = true
   global_remote_state           = true
-  terraform_version             = "1.3.3"
+  terraform_version             = "1.3.9"
   structured_run_output_enabled = true
   queue_all_runs                = false
   working_directory             = "30-projects/envs/prd/"

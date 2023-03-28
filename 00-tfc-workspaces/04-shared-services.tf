@@ -1,11 +1,12 @@
 resource "tfe_workspace" "shared-services" {
   name                          = "04-shared-services"
   organization                  = var.tfc_organization
+  project_id                    = tfe_project.project.id
   description                   = "Common services shared amongst all the environments"
   tag_names                     = ["common", "global", "shared"]
   allow_destroy_plan            = true
   global_remote_state           = true
-  terraform_version             = "1.3.3"
+  terraform_version             = "1.3.9"
   structured_run_output_enabled = true
   queue_all_runs                = false
   working_directory             = "04-shared-services"

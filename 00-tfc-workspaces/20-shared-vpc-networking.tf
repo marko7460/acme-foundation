@@ -1,11 +1,12 @@
 resource "tfe_workspace" "shared-vpc-networking-dev" {
   name                          = "20-shared-vpc-networking-dev"
   organization                  = var.tfc_organization
+  project_id                    = tfe_project.project.id
   description                   = "Dev Shared VPC Networking"
   tag_names                     = ["shared-vpc-networking", "dev"]
   allow_destroy_plan            = true
   global_remote_state           = true
-  terraform_version             = "1.3.3"
+  terraform_version             = "1.3.9"
   structured_run_output_enabled = true
   queue_all_runs                = false
   working_directory             = "20-shared-vpc-networking/envs/dev/"
@@ -26,11 +27,12 @@ resource "tfe_workspace_variable_set" "shared-vpc-networking-wif-dev" {
 resource "tfe_workspace" "shared-vpc-networking-stg" {
   name                          = "20-shared-vpc-networking-stg"
   organization                  = var.tfc_organization
+  project_id                    = tfe_project.project.id
   description                   = "Stg Shared VPC Networking"
   tag_names                     = ["shared-vpc-networking", "stg"]
   allow_destroy_plan            = true
   global_remote_state           = true
-  terraform_version             = "1.3.3"
+  terraform_version             = "1.3.9"
   structured_run_output_enabled = true
   queue_all_runs                = false
   working_directory             = "20-shared-vpc-networking/envs/stg/"
@@ -51,11 +53,12 @@ resource "tfe_workspace_variable_set" "shared-vpc-networking-wif-stg" {
 resource "tfe_workspace" "shared-vpc-networking-prd" {
   name                          = "20-shared-vpc-networking-prd"
   organization                  = var.tfc_organization
+  project_id                    = tfe_project.project.id
   description                   = "Prd Shared VPC Networking"
   tag_names                     = ["shared-vpc-networking", "prd"]
   allow_destroy_plan            = true
   global_remote_state           = true
-  terraform_version             = "1.3.3"
+  terraform_version             = "1.3.9"
   structured_run_output_enabled = true
   queue_all_runs                = false
   working_directory             = "20-shared-vpc-networking/envs/prd/"

@@ -3,6 +3,15 @@ data "tfe_oauth_client" "client" {
   name         = var.github_oauth_client
 }
 
+data "tfe_organization" "tfc-org" {
+  name = var.tfc_organization
+}
+
+resource "tfe_project" "project" {
+  organization = var.tfc_organization
+  name         = var.tfc_project
+}
+
 resource "tfe_variable_set" "gcp-org-data" {
   name         = "GCP Org Data"
   description  = "GCP Org data necessary for project creations."
