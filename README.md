@@ -1,25 +1,43 @@
 # acme-foundations
-Example terraform foundations for imaginary ACME organization based on https://cloud.google.com/docs/terraform/best-practices-for-terraform
+Example terraform foundation for imaginary ACME organization based on https://cloud.google.com/docs/terraform/best-practices-for-terraform
 This example repository shows how you can deploy foundation resources (folders, projects, VPCs, etc.) in an organization.
-This is a `green field` typo of a deployment that assumes that you are starting off with an empty organization and
-superadmin user. The goal of this repo is to deploy and manage all the resources using [Terraform Cloud](https://app.terraform.io/)
+This is a `green field` type of deployment that assumes that you are starting off with an empty organization and
+a superadmin user. The goal of this repo is to deploy and manage all the resources using [Terraform Cloud](https://app.terraform.io/)
 but the code can be easily adjusted for `Terraform Enterprise` as well.
 
-In the following steps we will demonstrate how this repo can be used with Terraform Cloud to _green field_ deploy foundation
-resources without any code changes or any gcp service account keys needed. Everything will be done through the web browser
-(Chrome). The code in this repository will set up Workload Identity Federation on GCP side in order to avoid crating any
-service account keys. Furthermore, the GCP organization policies will be set in a way that prevents service account key
-creation.
-
-Deployed architectue is simplified Dual SVPC architecture described in the [CFT terraform-example-foundation](https://github.com/terraform-google-modules/terraform-example-foundation)
+Deployed architecture is simplified Dual SVPC architecture described in the [CFT terraform-example-foundation](https://github.com/terraform-google-modules/terraform-example-foundation)
 This terraform code will deploy the following infrastructure:
 ![](docs/ACME-Foundation.png)
 
+# Use Cases
+* You can use this project to bootstrap your new GCP organization with GCP recommended best practices
+* You can use this project to create new foundation that follows the best practice while you are decomissioning old infrastructure
+* If you need terraform code to be integrated with CI/CD and Github this project comes with all of it
+* GitOps management of the deployed infrastructure.
+
+# Scenarios
+You can use this code for the following scenarions
+1. As a DevOps team/organization you need to bootstrap GCP organization with best practices.
+2. As a DevOps team/organization you need GCP resources to be managed via CI/CD system and GitOps workflow.
+3. As a DevOps team/organization you need an easy way to changes infrastructure parameters.
+4. As a DevOps team/organization you need an easy way to extend the foundation infrastructure. For example, you can easily add environments or subnets.
+
+# Skill Level
+* Basic knowledge of terraform workflows
+* Basic knowledge of terraform syntax
+* Basic knowledge of GCP Console UI and gcloud command
+
 # Deployment Procedure
+In the following steps we will demonstrate how this repo can be used with Terraform Cloud to _green field_ deploy foundation
+resources without any code changes or any gcp service account keys needed. Everything will be done through the web browser
+(Chrome). The code in this repository will set up **Workload Identity Federation** on GCP side in order to avoid crating any
+service account keys. Furthermore, the GCP organization policies will be set in a way that prevents service account key
+creation.
+
 The following groups of steps will help you deploy the foundations in your organization. The steps are grouped in the
 following way:
 * [0 - Prerequisites](#0---prerequisites)
-* [1 -Presetup](#1---presetup)
+* [1 - Presetup](#1---presetup)
 * [2 - Setup 00-tfc-workspaces](#2---setup-00-tfc-workspaces)
 * [3 - Bootstrap the GCP environment](#3---bootstrap-the-gcp-environment)
 * [4 - Deploy the rest of the infrastructure](#4---deploy-the-rest-of-the-infrastructure)
@@ -31,7 +49,7 @@ Before starting the deployment you will need following:
 3. [Terraform Cloud Account](https://app.terraform.io) with terraform organization and superadmin rights.
 
 ## 1 - Presetup
-1. Clone this repo to your GitHub account
+1. Fork this repo to your GitHub account
 2. Go to Terraform Cloud and set up the GitHub provider following these instructions: https://developer.hashicorp.com/terraform/tutorials/cloud/github-oauth
 3. Go to https://console.cloud.google.com/ and set up the superadmin user with the following roles granted on the 
    organization level(!!!This repo assumes that the operator deploying this account is the user logged into GCP console.
@@ -65,7 +83,7 @@ This is the bootstraping workspace that will create all other workspaces and var
    3. `org_id` -> Your GCP Organization ID
    4. `github_repo` -> Your clone of this repo
    5. `github_oauth_client` -> Name of the GitHub VCS Provider. You can get this value by going to 
-      `https://app.terraform.io/app/<TFC ORGANIZATION NAME>/settings/version-control` See [this](docs/00-tfc-workspaces-github_oauth_client.png) image for an example
+      `https://app.terraform.io/app/<TFC_ORGANIZATION_NAME>/settings/version-control` See [this](docs/00-tfc-workspaces-github_oauth_client.png) image for an example
 4. Go to https://app.terraform.io/app/settings/tokens
 5. Press `Create an API Token` button
 6. For description enter `workload-identity-federation` and press `Create API token`
@@ -87,11 +105,11 @@ proper IAM permissions. It will also set up the workload identity federation bet
 service accounts to be used in TFC workspaces.
 1. go to https://console.cloud.google.com/ and activate the Cloud Shell
 2. Execute `gcloud auth print-access-token` and copy the value of the token. See [this](docs/01-cloud-administration-global-gcloud-auth.png) image for an example
-3. Go to https://app.terraform.io/app/<TFC ORGANIZATION NAME>/workspaces/01-cloud-administration-global/variables
+3. Go to https://app.terraform.io/app/<TFC_ORGANIZATION_NAME>/workspaces/01-cloud-administration-global/variables
 4. Create an **environment variable** `GOOGLE_OAUTH_ACCESS_TOKEN` with the value of the token from the step 2. See [this](docs/01-cloud-administration-google-access-token-variable.png) image for an example.
 5. Press `Actions->Start new run` button. Once the plan is over you should see around 150 resources to be created. Press `Confirm and Apply` button.
 6. Once terraform apply is over you should see `workload_identity_audience` and `workload_identity_pool_provider_id` outputs created. Copy values for these variables. See [this](docs/01-cloud-administration-global-outputs.png) image for an example.
-7. Go to https://app.terraform.io/app/<TFC ORGANIZATION NAME>/settings/varsets/
+7. Go to https://app.terraform.io/app/<TFC_ORGANIZATION_NAME>/settings/varsets/
 8. Press on `Workload Identity` variable set
 9. Add terraform variable workload_identity_pool_provider_id with the value of the output `workload_identity_pool_provider_id` from the step 6. See [this](docs/workload-identity-variable-set.png) image for an example.
 10. Add **environment variable** `TFC_WORKLOAD_IDENTITY_AUDIENCE` with the value of the output `workload_identity_audience`  from the step 6. See [this](docs/workload-identity-variable-set.png) image for an example.
