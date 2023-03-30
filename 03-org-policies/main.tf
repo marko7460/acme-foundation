@@ -1,8 +1,3 @@
-data "tfe_outputs" "admin-global" {
-  organization = var.tfc_organization
-  workspace    = "01-cloud-administration-global"
-}
-
 locals {
   essential_contacts_domains_to_allow = concat(
     [for domain in var.essential_contacts_domains_to_allow : "${domain}" if can(regex("^@.*$", domain)) == true],

@@ -10,18 +10,11 @@ variable "tfc_organization" {
   description = "The TFC organization name"
 }
 
-variable "workload_identity_pool_provider_id" {
-  description = "GCP workload identity pool provider ID. Set this value in your workspace after the initial deployement"
-  type        = string
-}
-
 module "projects" {
-  source                             = "../../modules/shared-vpc-project"
-  billing_account_id                 = var.billing_account_id
-  org_id                             = var.org_id
-  tfc_organization                   = var.tfc_organization
-  workload_identity_pool_provider_id = var.workload_identity_pool_provider_id
-  terraform_service_account          = "tf-project-creator-prd"
+  source             = "../../modules/shared-vpc-project"
+  billing_account_id = var.billing_account_id
+  org_id             = var.org_id
+  tfc_organization   = var.tfc_organization
   projects = {
     "shared-vpc-prd" = {
       folder = "prd",

@@ -11,7 +11,6 @@ context policy is used to define access levels and access policies for the organ
 | org\_id | GCP Organization ID | `string` | n/a | yes |
 | policy\_name | The Access Context policy's name. | `string` | n/a | yes |
 | tfc\_organization | Terraform cloud organization | `string` | n/a | yes |
-| workload\_identity\_pool\_provider\_id | GCP workload identity pool provider ID. Set this value in your workspace after the initial deployement | `string` | n/a | yes |
 
 ## Outputs
 

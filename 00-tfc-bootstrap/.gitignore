@@ -29,5 +29,5 @@ override.tf.json
 # example: *tfplan*
 
 .idea
-terraform.tfvars
+# terraform.tfvars
 backend.init

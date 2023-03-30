@@ -29,6 +29,14 @@ resource "tfe_workspace_variable_set" "shared-vpc-project-wif-dev" {
   workspace_id    = tfe_workspace.shared-vpc-project-dev.id
 }
 
+resource "tfe_variable" "shared-vpc-project-dev-gcp-service-account-email" {
+  workspace_id = tfe_workspace.shared-vpc-project-dev.id
+  key          = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
+  value        = google_service_account.tf-sa["tf-project-creator-dev"].email
+  category     = "env"
+  description  = "The GCP service account email runs will use to authenticate."
+}
+
 resource "tfe_workspace" "shared-vpc-project-stg" {
   name                          = "10-shared-vpc-projects-stg"
   organization                  = var.tfc_organization
@@ -60,6 +68,14 @@ resource "tfe_workspace_variable_set" "shared-vpc-project-wif-stg" {
   workspace_id    = tfe_workspace.shared-vpc-project-stg.id
 }
 
+resource "tfe_variable" "shared-vpc-project-stg-gcp-service-account-email" {
+  workspace_id = tfe_workspace.shared-vpc-project-stg.id
+  key          = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
+  value        = google_service_account.tf-sa["tf-project-creator-stg"].email
+  category     = "env"
+  description  = "The GCP service account email runs will use to authenticate."
+}
+
 resource "tfe_workspace" "shared-vpc-project-prd" {
   name                          = "10-shared-vpc-projects-prd"
   organization                  = var.tfc_organization
@@ -89,4 +105,12 @@ resource "tfe_workspace_variable_set" "shared-vpc-project-prd" {
 resource "tfe_workspace_variable_set" "shared-vpc-project-wif-prd" {
   variable_set_id = tfe_variable_set.workload-identity.id
   workspace_id    = tfe_workspace.shared-vpc-project-prd.id
+}
+
+resource "tfe_variable" "shared-vpc-project-prd-gcp-service-account-email" {
+  workspace_id = tfe_workspace.shared-vpc-project-prd.id
+  key          = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
+  value        = google_service_account.tf-sa["tf-project-creator-prd"].email
+  category     = "env"
+  description  = "The GCP service account email runs will use to authenticate."
 }

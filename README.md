@@ -38,9 +38,8 @@ The following groups of steps will help you deploy the foundations in your organ
 following way:
 * [0 - Prerequisites](#0---prerequisites)
 * [1 - Presetup](#1---presetup)
-* [2 - Setup 00-tfc-workspaces](#2---setup-00-tfc-workspaces)
-* [3 - Bootstrap the GCP environment](#3---bootstrap-the-gcp-environment)
-* [4 - Deploy the rest of the infrastructure](#4---deploy-the-rest-of-the-infrastructure)
+* [2 - Setup 00-tfc-bootstrap](#2---setup-00-tfc-bootstrap)
+* [3 - Deploy the rest of the infrastructure](#3---deploy-the-rest-of-the-infrastructure)
 
 ## 0 - Prerequisites
 Before starting the deployment you will need following:
@@ -64,64 +63,63 @@ Before starting the deployment you will need following:
    8. Project Lien Modifies
    9. Support Account Administrator
       1. ![Example SuperAdmin account setup](docs/Superadmin_Organization_IAM_Roles.png)
+4. Open the cloud shell (Open this in the new tab: https://console.cloud.google.com/?cloudshell=true)
+5. Run `gcloud auth print-access-token` and save the value of the token. You will need this in the following section.
 
-## 2 - Setup 00-tfc-workspaces
-This is the bootstraping workspace that will create all other workspaces and variable sets in terraform cloud.
+## 2 - Setup 00-tfc-bootstrap
+This is the bootstrapping workspace that will create all other workspaces with proper variables and also bootstrap GCP with proper
+TFC project, Workload Identity Federation, GCP Folders, and proper GCP automation service accounts.
 1. Go to https://app.terraform.io/
-2. Create workspace `00-tfc-workspaces` with the following settings:
+2. Create workspace `00-tfc-bootstrap` with the following settings:
    1. Version Control Workflow
-   2. For Version Control Provider use the provider that you set up in step 2 of [1 - Presetup](#1---presetup). Example: ![](docs/00-tfc-workspaces-vcs-provider.png)
-   3. Choose the clone of this repository. Example: ![](docs/00-tfc-workspaces-github-repo.png)
-   4. Set Workspace Name text field to **00-tfc-workspaces**
+   2. For Version Control Provider use the provider that you set up in step 2 of [1 - Presetup](#1---presetup). Example: ![](docs/00-tfc-bootstrap-vcs-provider.png)
+   3. Choose the clone of this repository. Example: ![](docs/00-tfc-bootstrap-github-repo.png)
+   4. Set Workspace Name text field to **00-tfc-bootstrap**
    5. Press `Advanced Options` button
-   6. Set `Terraform Working Directory` to **00-tfc-workspaces**
+   6. Set `Terraform Working Directory` to **00-tfc-bootstrap**
    7. Press `Create Workspace`
    8. Press `Go to workspace overview button`
-3. Create the following terraform variables for the `00-tfc-workspaces`:
+3. Create the following terraform variables for the `00-tfc-bootstrap`:
    1. `tfc_organization` -> Name of your terraform cloud organization
    2. `billing_account_id` -> GCP Billing Account ID.
    3. `org_id` -> Your GCP Organization ID
    4. `github_repo` -> Your clone of this repo
    5. `github_oauth_client` -> Name of the GitHub VCS Provider. You can get this value by going to 
-      `https://app.terraform.io/app/<TFC_ORGANIZATION_NAME>/settings/version-control` See [this](docs/00-tfc-workspaces-github_oauth_client.png) image for an example
-4. Go to https://app.terraform.io/app/settings/tokens
-5. Press `Create an API Token` button
-6. For description enter `workload-identity-federation` and press `Create API token`
-7. Copy the value of the token and press `Done` (I would advise to save this value somewhere temporarily)
-8. Go back to the `00-tfc-workspaces` and create an **environment variable** `TFE_TOKEN` with the sensitive value from the
-   previous step. Your variables should look like this ![](docs/00-tfc-workspaces-variables.png)
-9. Deploy the workspaces by pressing `Actions-Start new run` button. Once the plan is over you should see around 47
-   resources to be created. Press `Confirm and Apply` button.
-10. Go to the `00-tfc-workspaces` workspace settings and allow remote state sharing with all other workspaces. Example:
-    ![](docs/00-tfc-workspaces-remote-state-sharing.png)
+      `https://app.terraform.io/app/<TFC_ORGANIZATION_NAME>/settings/version-control` See [this](docs/00-tfc-bootstrap-github_oauth_client.png) image for an example
+4. Create the **environment variable** `GOOGLE_OAUTH_ACCESS_TOKEN` and set the value to the value obtained in the step 5 of [1 - Presetup](#1---presetup) 
+5. Go to https://app.terraform.io/app/settings/tokens
+6. Press `Create an API Token` button 
+7. For description enter `workload-identity-federation` and press `Create API token`
+8. Copy the value of the token and press `Done` (I would advise to save this value somewhere temporarily)
+9. Go back to the `00-tfc-bootstrap` and create an **environment variable** `TFE_TOKEN` with the sensitive value from the
+   previous step. Your variables should look like this ![](docs/00-tfc-bootstrap-variables.png)
+10. Deploy the workspaces by pressing `Actions-Start new run` button. Once the plan is over you should see around 47
+   resources to be created. Press `Confirm and Apply` button. 
+11. Go to the `00-tfc-bootstrap` workspace settings and allow remote state sharing with all other workspaces. Example:
+    ![](docs/00-tfc-bootstrap-remote-state-sharing.png)
+12. Go to the variables and delete the **environment variable** `GOOGLE_OAUTH_ACCESS_TOKEN`.
 
 If everything went well you should see the following workspaces created in your terraform cloud organization:
-![](docs/all-workspaces.png)
+* 01-cloud-administration-global
+* 02-global-iam
+* 03-org-policies
+* 04-shared-services
+* 05-hierarchical-firewall-policy
+* 10-shared-vpc-projects-dev
+* 10-shared-vpc-projects-stg
+* 10-shared-vpc-projects-prd
+* 20-shared-vpc-networking-dev
+* 20-shared-vpc-networking-stg
+* 20-shared-vpc-networking-prd
+* 30-projects-dev
+* 30-projects-stg
+* 30-projects-prd
 
-## 3 - Bootstrap the GCP environment
-In this procedure we will bootstrap the GCP environment by running the `01-cloud-administration-global` workspace. This
-code will create initial admin projects, environment folders, terraform service accounts for other TFC workspaces with
-proper IAM permissions. It will also set up the workload identity federation between GCP and TFC that will allow keyless
-service accounts to be used in TFC workspaces.
-1. go to https://console.cloud.google.com/ and activate the Cloud Shell
-2. Execute `gcloud auth print-access-token` and copy the value of the token. See [this](docs/01-cloud-administration-global-gcloud-auth.png) image for an example
-3. Go to https://app.terraform.io/app/<TFC_ORGANIZATION_NAME>/workspaces/01-cloud-administration-global/variables
-4. Create an **environment variable** `GOOGLE_OAUTH_ACCESS_TOKEN` with the value of the token from the step 2. See [this](docs/01-cloud-administration-google-access-token-variable.png) image for an example.
-5. Press `Actions->Start new run` button. Once the plan is over you should see around 150 resources to be created. Press `Confirm and Apply` button.
-6. Once terraform apply is over you should see `workload_identity_audience` and `workload_identity_pool_provider_id` outputs created. Copy values for these variables. See [this](docs/01-cloud-administration-global-outputs.png) image for an example.
-7. Go to https://app.terraform.io/app/<TFC_ORGANIZATION_NAME>/settings/varsets/
-8. Press on `Workload Identity` variable set
-9. Add terraform variable workload_identity_pool_provider_id with the value of the output `workload_identity_pool_provider_id` from the step 6. See [this](docs/workload-identity-variable-set.png) image for an example.
-10. Add **environment variable** `TFC_WORKLOAD_IDENTITY_AUDIENCE` with the value of the output `workload_identity_audience`  from the step 6. See [this](docs/workload-identity-variable-set.png) image for an example.
-11. Last step would be to go back to the `01-cloud-administration-global` workspace and set the variable `use_google_oath_token` to `false`.
-    As a precautionary measure you can also delete the `GOOGLE_OAUTH_ACCESS_TOKEN` variable. Rerun the terraform plan.
-    There shouldn't be any changes.
 
-At this point you are set up to deploy the rest of the infrastructure.
-
-## 4 - Deploy the rest of the infrastructure
+## 3 - Deploy the rest of the infrastructure
 Execute the following workspaces in the following order:
-1. 02-global-iam
+1. 01-cloud-administration-global
+2. 02-global-iam
 2. 03-org-policies
 3. 04-shared-services
 4. 05-hierarchical-firewall-policy
@@ -137,3 +135,12 @@ Execute the following workspaces in the following order:
 
 If everything went well you should have the following infrastructure deployed:
 ![](docs/projects-folders.png)
+
+## 4 - Operation
+If you want to change folder names the best way to do this is by changing variable `folders` in [00-tfc-boostrap/terraform.tfvars](00-tfc-bootstrap/terraform.tfvars).
+
+If you need to change the values for certain parts of the infrastructure the best way to do this is by changing variables
+in the `terraform.tfvars` files in the respective directories. For example, to add firewall rules, change [05-hierarchical-firewall-policy/terraform.tfvars](05-hierarchical-firewall-policy/terraform.tfvars).
+
+If you need to expand this infrastructure template with new components then you need to create new TFC workspaces by chaging
+the code in [00-tfc-boostrap](00-tfc-bootstrap).

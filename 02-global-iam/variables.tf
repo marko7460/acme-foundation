@@ -8,11 +8,6 @@ variable "org_id" {
   type        = string
 }
 
-variable "workload_identity_pool_provider_id" {
-  description = "GCP workload identity pool provider ID. Set this value in your workspace after the initial deployement"
-  type        = string
-}
-
 variable "org_bindings" {
   description = "Map of role (key) and list of members (value) to add the IAM policies/bindings"
   type        = map(list(string))

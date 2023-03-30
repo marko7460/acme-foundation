@@ -24,6 +24,14 @@ resource "tfe_workspace_variable_set" "shared-vpc-networking-wif-dev" {
   workspace_id    = tfe_workspace.shared-vpc-networking-dev.id
 }
 
+resource "tfe_variable" "shared-vpc-networking-dev-gcp-service-account-email" {
+  workspace_id = tfe_workspace.shared-vpc-networking-dev.id
+  key          = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
+  value        = google_service_account.tf-sa["tf-project-creator-dev"].email
+  category     = "env"
+  description  = "The GCP service account email runs will use to authenticate."
+}
+
 resource "tfe_workspace" "shared-vpc-networking-stg" {
   name                          = "20-shared-vpc-networking-stg"
   organization                  = var.tfc_organization
@@ -50,6 +58,14 @@ resource "tfe_workspace_variable_set" "shared-vpc-networking-wif-stg" {
   workspace_id    = tfe_workspace.shared-vpc-networking-stg.id
 }
 
+resource "tfe_variable" "shared-vpc-networking-stg-gcp-service-account-email" {
+  workspace_id = tfe_workspace.shared-vpc-networking-stg.id
+  key          = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
+  value        = google_service_account.tf-sa["tf-project-creator-stg"].email
+  category     = "env"
+  description  = "The GCP service account email runs will use to authenticate."
+}
+
 resource "tfe_workspace" "shared-vpc-networking-prd" {
   name                          = "20-shared-vpc-networking-prd"
   organization                  = var.tfc_organization
@@ -74,4 +90,12 @@ resource "tfe_workspace" "shared-vpc-networking-prd" {
 resource "tfe_workspace_variable_set" "shared-vpc-networking-wif-prd" {
   variable_set_id = tfe_variable_set.workload-identity.id
   workspace_id    = tfe_workspace.shared-vpc-networking-prd.id
+}
+
+resource "tfe_variable" "shared-vpc-networking-prd-gcp-service-account-email" {
+  workspace_id = tfe_workspace.shared-vpc-networking-prd.id
+  key          = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
+  value        = google_service_account.tf-sa["tf-project-creator-prd"].email
+  category     = "env"
+  description  = "The GCP service account email runs will use to authenticate."
 }

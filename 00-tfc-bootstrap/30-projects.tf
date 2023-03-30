@@ -29,6 +29,14 @@ resource "tfe_workspace_variable_set" "projects-wif-dev" {
   workspace_id    = tfe_workspace.projects-dev.id
 }
 
+resource "tfe_variable" "projects-dev-gcp-service-account-email" {
+  workspace_id = tfe_workspace.projects-dev.id
+  key          = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
+  value        = google_service_account.tf-sa["tf-project-creator-dev"].email
+  category     = "env"
+  description  = "The GCP service account email runs will use to authenticate."
+}
+
 resource "tfe_workspace" "projects-stg" {
   name                          = "30-projects-stg"
   organization                  = var.tfc_organization
@@ -60,6 +68,14 @@ resource "tfe_workspace_variable_set" "projects-wif-stg" {
   workspace_id    = tfe_workspace.projects-stg.id
 }
 
+resource "tfe_variable" "projects-stg-gcp-service-account-email" {
+  workspace_id = tfe_workspace.projects-stg.id
+  key          = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
+  value        = google_service_account.tf-sa["tf-project-creator-stg"].email
+  category     = "env"
+  description  = "The GCP service account email runs will use to authenticate."
+}
+
 resource "tfe_workspace" "projects-prd" {
   name                          = "30-projects-prd"
   organization                  = var.tfc_organization
@@ -85,7 +101,16 @@ resource "tfe_workspace_variable_set" "projects-prd" {
   variable_set_id = tfe_variable_set.gcp-org-data.id
   workspace_id    = tfe_workspace.projects-prd.id
 }
+
 resource "tfe_workspace_variable_set" "projects-wif-prd" {
   variable_set_id = tfe_variable_set.workload-identity.id
   workspace_id    = tfe_workspace.projects-prd.id
+}
+
+resource "tfe_variable" "projects-dev-prd-service-account-email" {
+  workspace_id = tfe_workspace.projects-prd.id
+  key          = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
+  value        = google_service_account.tf-sa["tf-project-creator-prd"].email
+  category     = "env"
+  description  = "The GCP service account email runs will use to authenticate."
 }

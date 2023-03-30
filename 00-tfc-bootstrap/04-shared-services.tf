@@ -25,3 +25,11 @@ resource "tfe_workspace_variable_set" "shared-services-wif" {
   variable_set_id = tfe_variable_set.workload-identity.id
   workspace_id    = tfe_workspace.shared-services.id
 }
+
+resource "tfe_variable" "shared-services-gcp-service-account-email" {
+  workspace_id = tfe_workspace.shared-services.id
+  key          = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
+  value        = google_service_account.tf-sa["tf-project-creator-shared"].email
+  category     = "env"
+  description  = "The GCP service account email runs will use to authenticate."
+}

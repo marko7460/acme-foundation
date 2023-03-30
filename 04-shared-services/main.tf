@@ -1,6 +1,6 @@
-data "tfe_outputs" "admin-global" {
+data "tfe_outputs" "bootstrap" {
   organization = var.tfc_organization
-  workspace    = "01-cloud-administration-global"
+  workspace    = "00-tfc-bootstrap"
 }
 
 module "projects" {
@@ -8,7 +8,7 @@ module "projects" {
   source                         = "terraform-google-modules/project-factory/google"
   version                        = "~> 14.1"
   name                           = each.key
-  folder_id                      = data.tfe_outputs.admin-global.values.folders["shared"].folder_id
+  folder_id                      = data.tfe_outputs.bootstrap.values.folders["shared"].folder_id
   random_project_id              = true
   enable_shared_vpc_host_project = each.value.enable_shared_vpc_host_project
   org_id                         = var.org_id
