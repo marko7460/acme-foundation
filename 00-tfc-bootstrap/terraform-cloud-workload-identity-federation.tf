@@ -1,18 +1,18 @@
 resource "google_iam_workload_identity_pool" "tfe-pool" {
-  project                   = module.admin_project.project_id
+  project                   = module.bootstrap_project.project_id
   workload_identity_pool_id = var.workload_identity_pool_id
   display_name              = "TFE Pool"
   description               = "Identity pool for Terraform Enterprise OIDC integration"
 }
 
 resource "google_iam_workload_identity_pool_provider" "tfe-pool-provider" {
-  project                            = module.admin_project.project_id
+  project                            = module.bootstrap_project.project_id
   workload_identity_pool_id          = google_iam_workload_identity_pool.tfe-pool.workload_identity_pool_id
   workload_identity_pool_provider_id = "tfe-pool"
   display_name                       = "TFE Pool Provider"
   description                        = "OIDC identity pool provider for TFE Integration"
   # Use condition to make sure only token generated for a specific TFE Org can be used across org workspaces
-  attribute_condition = "attribute.terraform_organization_id == \"${var.tfc_organization_id}\""
+  attribute_condition = "attribute.terraform_organization_id == \"${data.tfe_organization.tfc-org.id}\""
   attribute_mapping = {
     "google.subject"                        = "assertion.sub"
     "attribute.aud"                         = "assertion.aud"

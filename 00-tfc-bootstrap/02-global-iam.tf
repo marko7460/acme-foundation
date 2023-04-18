@@ -28,3 +28,11 @@ resource "tfe_workspace_variable_set" "global-iam-wif" {
   variable_set_id = tfe_variable_set.workload-identity.id
   workspace_id    = tfe_workspace.global-iam.id
 }
+
+resource "tfe_variable" "global-iam-gcp-service-account-email" {
+  workspace_id = tfe_workspace.global-iam.id
+  key          = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
+  value        = google_service_account.tf-sa["tf-global-iam-sa"].email
+  category     = "env"
+  description  = "The GCP service account email runs will use to authenticate."
+}

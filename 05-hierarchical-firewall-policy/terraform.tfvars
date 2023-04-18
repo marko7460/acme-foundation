@@ -1,6 +1,5 @@
-//For now the associates are to the folders created in 01-administration
-terraform_service_account = "tf-firewall-policy"
-associations              = ["dev", "stg", "prd", "shared"]
+//For now the associates are to the folders created in 00-tfc-bootstrap
+associations = ["dev", "stg", "prd", "shared"]
 
 rules = {
   delegate-rfc1918-ingress = {

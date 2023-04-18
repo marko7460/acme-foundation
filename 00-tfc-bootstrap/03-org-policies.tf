@@ -28,3 +28,11 @@ resource "tfe_workspace_variable_set" "org-policies-wif" {
   variable_set_id = tfe_variable_set.workload-identity.id
   workspace_id    = tfe_workspace.org-policies.id
 }
+
+resource "tfe_variable" "org-policies-gcp-service-account-email" {
+  workspace_id = tfe_workspace.org-policies.id
+  key          = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
+  value        = google_service_account.tf-sa["tf-org-policy-sa"].email
+  category     = "env"
+  description  = "The GCP service account email runs will use to authenticate."
+}

@@ -29,3 +29,11 @@ resource "tfe_workspace_variable_set" "hierarchical-firewall-policy-wif" {
   variable_set_id = tfe_variable_set.workload-identity.id
   workspace_id    = tfe_workspace.hierarchical-firewall-policy.id
 }
+
+resource "tfe_variable" "hierarchical-firewall-policy-gcp-service-account-email" {
+  workspace_id = tfe_workspace.hierarchical-firewall-policy.id
+  key          = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
+  value        = google_service_account.tf-sa["tf-firewall-policy"].email
+  category     = "env"
+  description  = "The GCP service account email runs will use to authenticate."
+}

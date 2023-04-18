@@ -1,6 +1,7 @@
 output "workspaces" {
   description = "Map of the workspace names and IDs"
   value = {
+    "00-tfc-bootstrap"                = data.tfe_workspace.bootstrap.id
     "01-cloud-administration-global"  = tfe_workspace.cloud-administration-global.id
     "02-global-iam"                   = tfe_workspace.global-iam.id
     "03-org-policies"                 = tfe_workspace.org-policies.id
@@ -16,4 +17,25 @@ output "workspaces" {
     "30-projects-stg"                 = tfe_workspace.projects-stg.id
     "30-projects-prd"                 = tfe_workspace.projects-prd.id
   }
+}
+
+output "folders" {
+  description = "Map of created folders"
+  value       = google_folder.folders
+}
+
+output "service_accounts" {
+  description = "Terraform service accounts"
+  value = {
+    for service_account, conf in google_service_account.tf-sa :
+    service_account => {
+      email = conf.email
+      id    = conf.id
+    }
+  }
+}
+
+output "service_account_self" {
+  description = "Service Account that is used to self manage this workspace"
+  value       = google_service_account.tf-bootstrap-self.email
 }

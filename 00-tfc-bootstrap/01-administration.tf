@@ -26,16 +26,10 @@ resource "tfe_workspace_variable_set" "cloud-administration-global-wif" {
   workspace_id    = tfe_workspace.cloud-administration-global.id
 }
 
-resource "tfe_variable" "cloud-administration-global-tfc-organization-id" {
-  category     = "terraform"
-  key          = "tfc_organization_id"
-  value        = data.tfe_organization.tfc-org.id
+resource "tfe_variable" "cloud-administration-global-gcp-service-account-email" {
   workspace_id = tfe_workspace.cloud-administration-global.id
-}
-
-resource "tfe_variable" "cloud-administration-global-use-google-oath_token" {
-  category     = "terraform"
-  key          = "use_google_oath_token"
-  value        = true
-  workspace_id = tfe_workspace.cloud-administration-global.id
+  key          = "TFC_GCP_RUN_SERVICE_ACCOUNT_EMAIL"
+  value        = google_service_account.tf-sa["tf-admin"].email
+  category     = "env"
+  description  = "The GCP service account email runs will use to authenticate."
 }

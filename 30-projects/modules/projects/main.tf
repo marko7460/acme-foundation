@@ -1,6 +1,6 @@
-data "tfe_outputs" "admin-global" {
+data "tfe_outputs" "bootstrap" {
   organization = var.tfc_organization
-  workspace    = "01-cloud-administration-global"
+  workspace    = "00-tfc-bootstrap"
 }
 
 data "tfe_outputs" "host_project" {
@@ -23,7 +23,7 @@ module "projects" {
   source               = "terraform-google-modules/project-factory/google"
   version              = "~> 14.1"
   name                 = each.key
-  folder_id            = data.tfe_outputs.admin-global.values.folders[var.folder].folder_id
+  folder_id            = data.tfe_outputs.bootstrap.values.folders[var.folder].folder_id
   random_project_id    = true
   org_id               = var.org_id
   billing_account      = var.billing_account_id

@@ -1,4 +1,3 @@
-terraform_service_account = "tf-project-creator-shared"
 projects = {
   common-services = {
     labels = {

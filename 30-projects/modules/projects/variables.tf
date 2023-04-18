@@ -2,15 +2,6 @@ variable "tfc_organization" {
   description = "The TFC organization name"
 }
 
-variable "workload_identity_pool_provider_id" {
-  description = "GCP workload identity pool provider ID. Set this value in your workspace after the initial deployement"
-  type        = string
-}
-
-variable "terraform_service_account" {
-  description = "The service account id used by Terraform Cloud to access GCP. This is set in 01-administration/terraform.tfvars "
-}
-
 variable "tfc_host_project_workspace" {
   description = "TFC workspace holding host project outputs"
 }

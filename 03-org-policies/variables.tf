@@ -8,11 +8,6 @@ variable "org_id" {
   type        = string
 }
 
-variable "workload_identity_pool_provider_id" {
-  description = "GCP workload identity pool provider ID. Set this value in your workspace after the initial deployement"
-  type        = string
-}
-
 variable "essential_contacts_domains_to_allow" {
   description = "The list of domains that email addresses added to Essential Contacts can have."
   type        = list(string)

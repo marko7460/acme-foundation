@@ -2,25 +2,18 @@ variable "tfc_organization" {
   description = "The TFC organization name"
 }
 
-variable "workload_identity_pool_provider_id" {
-  description = "GCP workload identity pool provider ID. Set this value in your workspace after the initial deployement"
-  type        = string
-}
-
-data "tfe_outputs" "admin-global" {
+data "tfe_outputs" "bootstrap" {
   organization = var.tfc_organization
-  workspace    = "01-cloud-administration-global"
+  workspace    = "00-tfc-bootstrap"
 }
 
 locals {
-  self_sa = data.tfe_outputs.admin-global.values.service_accounts["tf-project-creator-prd"].email
+  self_sa = data.tfe_outputs.bootstrap.values.service_accounts["tf-project-creator-prd"].email
 }
 
 module "shared_vpcs" {
   source                             = "../../modules/networking"
   tfc_workspace_for_host_project     = "10-shared-vpc-projects-prd"
-  terraform_service_account          = "tf-project-creator-prd"
-  workload_identity_pool_provider_id = var.workload_identity_pool_provider_id
   tfc_organization                   = var.tfc_organization
   shared_vpcs = {
     base-shared-network = {

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-data "tfe_outputs" "admin-global" {
+data "tfe_outputs" "bootstrap" {
   organization = var.tfc_organization
-  workspace    = "01-cloud-administration-global"
+  workspace    = "00-tfc-bootstrap"
 }
 
 locals {
@@ -63,5 +63,5 @@ resource "google_compute_organization_security_policy_association" "association"
   for_each      = toset(var.associations)
   name          = "${local.policy_id}-${each.value}"
   policy_id     = local.policy_id
-  attachment_id = data.tfe_outputs.admin-global.values.folders[each.value].id
+  attachment_id = data.tfe_outputs.bootstrap.values.folders[each.value].id
 }

@@ -6,15 +6,6 @@ variable "tfc_workspace_for_host_project" {
   description = "The TFC workspace name from which to get the state"
 }
 
-variable "workload_identity_pool_provider_id" {
-  description = "GCP workload identity pool provider ID. Set this value in your workspace after the initial deployement"
-  type        = string
-}
-
-variable "terraform_service_account" {
-  description = "The service account id used by Terraform Cloud to access GCP. This is set in 01-administration/terraform.tfvars "
-}
-
 variable "shared_vpcs" {
   description = "Map of shared VPCs that you want created"
   type = map(object({

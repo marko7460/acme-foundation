@@ -7,6 +7,11 @@ data "tfe_organization" "tfc-org" {
   name = var.tfc_organization
 }
 
+data "tfe_workspace" "bootstrap" {
+  name         = "00-tfc-bootstrap"
+  organization = var.tfc_organization
+}
+
 resource "tfe_project" "project" {
   organization = var.tfc_organization
   name         = var.tfc_project
@@ -55,3 +60,36 @@ resource "tfe_variable" "tfc_organization" {
   description     = "TFC Cloud organization"
   variable_set_id = tfe_variable_set.common-for-all.id
 }
+
+resource "tfe_variable" "enable_gcp_provider_auth" {
+  variable_set_id = tfe_variable_set.workload-identity.id
+  key             = "TFC_GCP_PROVIDER_AUTH"
+  value           = "true"
+  category        = "env"
+  description     = "Enable the Workload Identity integration for GCP."
+}
+
+resource "tfe_variable" "tfc_gcp_project_number" {
+  variable_set_id = tfe_variable_set.workload-identity.id
+  key             = "TFC_GCP_PROJECT_NUMBER"
+  value           = module.bootstrap_project.project_number
+  category        = "env"
+  description     = "The numeric identifier of the GCP project"
+}
+
+resource "tfe_variable" "tfc_gcp_workload_pool_id" {
+  variable_set_id = tfe_variable_set.workload-identity.id
+  key             = "TFC_GCP_WORKLOAD_POOL_ID"
+  value           = google_iam_workload_identity_pool.tfe-pool.workload_identity_pool_id
+  category        = "env"
+  description     = "The ID of the workload identity pool."
+}
+
+resource "tfe_variable" "tfc_gcp_workload_provider_id" {
+  variable_set_id = tfe_variable_set.workload-identity.id
+  key             = "TFC_GCP_WORKLOAD_PROVIDER_ID"
+  value           = google_iam_workload_identity_pool_provider.tfe-pool-provider.workload_identity_pool_provider_id
+  category        = "env"
+  description     = "The ID of the workload identity pool provider."
+}
+
